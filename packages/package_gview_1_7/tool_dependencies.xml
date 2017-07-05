@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="gview" version="1.7">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url" sha256sum="23ca2e092c54420d2404eb126030cbfb77912b938aaf35588fe08546f2a7bcb7">https://www.gview.ca/files/release/1.7/gview-1.7.zip</action>
+                <action type="move_file">
+                    <source>gview.jar</source>
+                    <destination>$INSTALL_DIR/bin</destination>
+                <action type="shell_command">echo -n "#!" > $INSTALL_DIR/bin/gview</action>
+                <action type="shell_command">echo -e "/bin/bash\nGVIEW_DIR=\$(dirname \"\$(readlink -f \"\$BASH_SOURCE[0]\")\")\nchecked_args=\nwhile :\ndo\n    case \"\$1\" in\n        -i | -l | -f | -o | -W | -H | -s | -h )\n            option=\$1\n            checked_args=\"\${checked_args} \${option}\"\n            [[ \${option} = '-h' ]] && break\n            shift\n            if [[ \"x\" = \"x\$1\" ]]\n            then\n                echo \"not enough parameters to complete '\${checked_args}'\"\n                exit 1\n            fi\n            argument=\"\$1\"\n            if [[ \${option} = '-i' ]] && [[ \${argument} != *.xml ]]\n            then\n                cp \"\${argument}\" \"\${argument}.xml\"\n                argument=\"\${argument}.xml\"\n            fi\n            checked_args=\"\${checked_args} \${argument}\"\n            shift\n            ;;\n        * )\n           break\n    esac\ndone\njava -Xmx4G -jar \"\${GVIEW_DIR}/gview.jar\" \"\${checked_args}\"\n" >> $INSTALL_DIR/bin/gview</action>
+                <action type="chmod">
+                    <file mode="755">$INSTALL_DIR/bin/gview</file>            
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                    <environment_variable name="PYTHONPATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>See https://www.gview.ca</readme>
+    </package>
+</tool_dependency>
